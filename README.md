@@ -19,13 +19,7 @@ Application web de vente de vinyles en architecture 3-tiers : React + Express + 
 
 ### 1. Base de données
 
-Importer le script SQL dans MySQL :
-
-```bash
-mysql -u <utilisateur> -p < backend/db/boutique_vinyles.sql
-```
-
-Cela crée la base de données `boutique_vinyles` et insère 16 produits.
+Ouvrir `backend/db/boutique_vinyles.sql` et exécuter les instructions souhaitées. Le fichier contient la création de la base de données `boutique_vinyles` et l'insertion de 16 produits.
 
 ### 2. Backend
 
