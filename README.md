@@ -43,7 +43,7 @@ PAYPAL_SECRET=votre_secret_paypal_sandbox
 Démarrer le serveur :
 
 ```bash
-node app.js
+npm run dev
 ```
 
 Le backend tourne sur `http://localhost:3000`.
