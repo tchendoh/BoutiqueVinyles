@@ -51,6 +51,16 @@ export async function updateCartItem(id, quantity) {
 
 }
 
+export async function paypalCreateOrder(amount) {
+  const { data } = await axios.post(`${API_URL}/api/paypal/create-order`, { amount })
+  return data
+}
+
+export async function paypalCaptureOrder(orderID) {
+  const { data } = await axios.post(`${API_URL}/api/paypal/capture-order`, { orderID })
+  return data
+}
+
 export async function createOrder(paypalTransactionId) {
   const { data } = await axios.post(`${API_URL}/api/orders`, { paypalTransactionId })
   return data

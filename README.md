@@ -106,6 +106,12 @@ Pour tester les paiements, utilisez les comptes sandbox fournis dans le tableau 
 
 ---
 
+## Diagramme entité-relation
+
+![ERD Boutique Vinyles](docs/erdBoutiqueVinyles.png)
+
+---
+
 ## Architecture
 
 ```
