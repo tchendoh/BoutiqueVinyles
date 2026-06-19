@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const { Client, Environment, OrdersController, CheckoutPaymentIntent } = require('@paypal/paypal-server-sdk')
 
+// Source : https://developer.paypal.com/docs/api/orders/sdk/v2/
+
 const client = new Client({
   clientCredentialsAuthCredentials: {
     oAuthClientId: process.env.PAYPAL_CLIENT_ID,
@@ -17,7 +19,7 @@ router.post('/create-order', async (req, res) => {
   const { amount } = req.body
 
   try {
-    const { body: rawOrder } = await ordersController.createOrder({
+    const { result } = await ordersController.createOrder({
       body: {
         intent: CheckoutPaymentIntent.Capture,
         purchaseUnits: [
@@ -30,8 +32,7 @@ router.post('/create-order', async (req, res) => {
         ],
       },
     })
-    const order = typeof rawOrder === 'string' ? JSON.parse(rawOrder) : rawOrder
-    res.json({ orderID: order.id })
+    res.json({ orderID: result.id })
   } catch (error) {
     res.status(500).json({ erreur: error.message })
   }
@@ -42,12 +43,11 @@ router.post('/capture-order', async (req, res) => {
   const { orderID } = req.body
 
   try {
-    const { body: rawCapture } = await ordersController.captureOrder({
+    const { result } = await ordersController.captureOrder({
       id: orderID,
       body: {},
     })
-    const capture = typeof rawCapture === 'string' ? JSON.parse(rawCapture) : rawCapture
-    res.json(capture)
+    res.json(result)
   } catch (error) {
     res.status(500).json({ erreur: error.message })
   }

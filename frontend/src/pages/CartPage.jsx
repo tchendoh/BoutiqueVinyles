@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { getCart, updateCartItem, createOrder, paypalCreateOrder, paypalCaptureOrder } from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 
 function CartPage() {
   const [cart, setCart] = useState([])
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
+  const { firstName } = useAuth()
 
   useEffect(() => {
     getCart().then(data => setCart(data))
@@ -58,29 +60,33 @@ function CartPage() {
       </div>
 
       <div className="cart-paypal">
-      <PayPalScriptProvider options={{
-        clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
-        currency: 'CAD',
-        disableFunding: 'paylater,card'
-      }}>
-        <PayPalButtons
-          style={{ layout: 'vertical', color: 'black' }}
-          disableFunding={['paylater', 'card']}
-          createOrder={async () => {
-            const { orderID } = await paypalCreateOrder(total.toFixed(2))
-            return orderID
-          }}
-          onApprove={async (data) => {
-            const details = await paypalCaptureOrder(data.orderID)
-            await createOrder(details.id)
-            setTimeout(() => setMessage('Commande confirmée ! Merci pour ton argent !'), 500)
-            setTimeout(() => navigate('/orders'), 2500)
-          }}
-          onError={(err) => {
-            console.error('Erreur PayPal :', err)
-          }}
-        />
-      </PayPalScriptProvider>
+        {firstName ? (
+          <PayPalScriptProvider options={{
+            clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
+            currency: 'CAD',
+            disableFunding: 'paylater,card'
+          }}>
+            <PayPalButtons
+              style={{ layout: 'vertical', color: 'black' }}
+              disableFunding={['paylater', 'card']}
+              createOrder={async () => {
+                const { orderID } = await paypalCreateOrder(total.toFixed(2))
+                return orderID
+              }}
+              onApprove={async (data) => {
+                const details = await paypalCaptureOrder(data.orderID)
+                await createOrder(details.purchaseUnits[0].payments.captures[0].id)
+                setTimeout(() => setMessage('Commande confirmée ! Merci pour ton argent !'), 500)
+                setTimeout(() => navigate('/orders'), 2500)
+              }}
+              onError={(err) => {
+                console.error('Erreur PayPal :', err)
+              }}
+            />
+          </PayPalScriptProvider>
+        ) : (
+          <p>(Se connecter pour procéder au paiement.)</p>
+        )}
       </div>
 
       {message && (
