@@ -22,4 +22,4 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-module.exports = router  // toujours à la fin
+module.exports = router  

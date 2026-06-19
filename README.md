@@ -94,6 +94,43 @@ Pour tester les paiements, utilisez les comptes sandbox fournis dans le tableau 
 
 ---
 
+## Routes API backend
+
+**`auth.js`**
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| POST | `/auth/register` | Crée un compte, hache le mot de passe, démarre une session |
+| POST | `/auth/login` | Vérifie email + mot de passe, démarre une session |
+| POST | `/auth/logout` | Détruit la session |
+| GET | `/auth/me` | Retourne l'utilisateur connecté (via le cookie de session) |
+
+**`products.js`**
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/products` | Retourne tous les vinyles (ordre aléatoire) |
+| GET | `/api/products/:id` | Retourne un seul vinyle |
+
+**`cart.js`**
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/cart` | Retourne le panier de la session |
+| POST | `/api/cart` | Ajoute un produit au panier (ou incrémente la quantité) |
+| PUT | `/api/cart/:id` | Modifie la quantité d'un item (0 = supprime) |
+
+**`orders.js`**
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| POST | `/api/orders` | Crée la commande en BD (3 insertions en transaction : orders, order_items, payments) |
+| GET | `/api/orders` | Retourne l'historique des commandes de l'utilisateur connecté |
+
+**`paypal.js`**
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| POST | `/api/paypal/create-order` | Crée une commande PayPal et retourne l'`orderID` |
+| POST | `/api/paypal/capture-order` | Capture le paiement après approbation de l'utilisateur |
+
+---
+
 ## Stack technique
 
 | Couche          | Technologie                    |
